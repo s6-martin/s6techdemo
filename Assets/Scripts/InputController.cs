@@ -12,6 +12,9 @@ public class InputController : MonoBehaviour
     //is our character attacking?
     public bool attack;
 
+    // are we performing an action?
+    public bool interact;
+
     [Header("Movement Settings")]
     public bool analogMovement;
 
@@ -55,6 +58,11 @@ public class InputController : MonoBehaviour
             AttackInput(true);
         else 
             AttackInput(false);
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+
     }
 #endif
 

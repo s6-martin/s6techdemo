@@ -1,16 +1,22 @@
+using System;
+using TMPro;
 using UnityEngine;
 
 public class HUDController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField]
+    TMP_Text _hudInfo;
+
+    public void setHUD(string name, string tag)
     {
-        
+        if (tag == "Door")
+            _hudInfo.text = "Press F to open door";
+
+        _hudInfo.text = $"Press F to pick up {name}";
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ClearHUD()
     {
-        
+        _hudInfo.text = string.Empty;
     }
 }

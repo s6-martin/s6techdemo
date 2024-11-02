@@ -73,6 +73,8 @@ public class FPController : MonoBehaviour
     private InputController _input;
     private GameObject _mainCamera;
 
+    private HUDController _hudController;
+
     private const float _threshold = 0.01f;
 
     private bool IsCurrentDeviceMouse
@@ -105,6 +107,7 @@ public class FPController : MonoBehaviour
 #else
 		Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
+        _hudController = GetComponent<HUDController>();
 
         // reset our timeouts on start
         _jumpTimeoutDelta = JumpTimeout;
@@ -113,6 +116,7 @@ public class FPController : MonoBehaviour
 
     private void Update()
     {
+        Interact();
         JumpAndGravity();
         GroundedCheck();
         Move();
@@ -258,9 +262,27 @@ public class FPController : MonoBehaviour
 
     public void Interact()
     {
-        if (Physics.Raycast(new(Camera.main.transform.position, Camera.main.transform.forward), out RaycastHit hitInfo, 1f))
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 2, Color.red);
+        if (Physics.Raycast(new(Camera.main.transform.position, Camera.main.transform.forward * 2), out RaycastHit hitInfo, 1f))
         {
-            if(hitInfo.collider.tag = )
+            if(hitInfo.collider.tag == "Interactable")
+            {
+                _hudController.setHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
+            }
+
+            if(hitInfo.collider.tag == "Door")
+            {
+                _hudController.setHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
+
+                if(_input.interact)
+                {
+
+                }
+            }
+        }
+        else
+        {
+            _hudController.ClearHUD();
         }
     }
 
