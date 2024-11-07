@@ -1,16 +1,41 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUDController : MonoBehaviour
 {
     [SerializeField]
     TMP_Text _hudInfo;
+    [SerializeField]
+    TMP_Text _ammoCount;
+    [SerializeField]
+    TMP_Text _score;
+    [SerializeField]
+    Image _crosshair;
 
-    public void setHUD(string name, string tag)
+    public static HUDController instance;
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
+    public void SetHUD(string name, string tag)
     {
         if (tag == "Door")
+        {
             _hudInfo.text = "Press F to open door";
+            return;
+        }
 
         _hudInfo.text = $"Press F to pick up {name}";
     }
@@ -18,5 +43,17 @@ public class HUDController : MonoBehaviour
     public void ClearHUD()
     {
         _hudInfo.text = string.Empty;
+        _ammoCount.text = string.Empty;
+        _crosshair.gameObject.SetActive(false);
+    }
+
+    public void SetAmmo(int ammo)
+    {
+        _ammoCount.text = $"Ammo count: {ammo}";
+    }
+
+    internal void SetCrosshair()
+    {
+        _crosshair.gameObject.SetActive(true);
     }
 }

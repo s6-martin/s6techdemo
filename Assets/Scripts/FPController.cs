@@ -51,6 +51,8 @@ public class FPController : MonoBehaviour
 
     [Header("Inventory")]
     public GameObject CurrentlyEquippedWeapon;
+    [SerializeField]
+    Transform WeaponSlot;
 
     // cinemachine
     private float _cinemachineTargetPitch;
@@ -72,8 +74,6 @@ public class FPController : MonoBehaviour
     private CharacterController _controller;
     private InputController _input;
     private GameObject _mainCamera;
-
-    private HUDController _hudController;
 
     private const float _threshold = 0.01f;
 
@@ -107,7 +107,6 @@ public class FPController : MonoBehaviour
 #else
 		Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
-        _hudController = GetComponent<HUDController>();
 
         // reset our timeouts on start
         _jumpTimeoutDelta = JumpTimeout;
@@ -262,27 +261,40 @@ public class FPController : MonoBehaviour
 
     public void Interact()
     {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 2, Color.red);
-        if (Physics.Raycast(new(Camera.main.transform.position, Camera.main.transform.forward * 2), out RaycastHit hitInfo, 1f))
+        if (Physics.Raycast(new(_mainCamera.transform.position, _mainCamera.transform.forward * 2.5f), out RaycastHit hitInfo, 2.5f))
         {
-            if(hitInfo.collider.tag == "Interactable")
+            if(hitInfo.collider.gameObject.CompareTag("Interactable"))
             {
-                _hudController.setHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
+                HUDController.instance.SetHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
             }
 
-            if(hitInfo.collider.tag == "Door")
+            if(hitInfo.collider.gameObject.CompareTag("Door"))
             {
-                _hudController.setHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
+                HUDController.instance.SetHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
 
                 if(_input.interact)
                 {
+                    hitInfo.collider.gameObject.GetComponent<DoorController>().OpenDoor();
+                    _input.interact = false;
+                }
+            }
 
+            if(hitInfo.collider.gameObject.CompareTag("Weapon"))
+            {
+                HUDController.instance.SetHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
+                
+                if(_input.interact)
+                {
+                    Destroy(hitInfo.collider.gameObject);
+                    GameObject weapon = Instantiate(hitInfo.collider.gameObject, WeaponSlot.position, WeaponSlot.rotation, WeaponSlot);
+                    CurrentlyEquippedWeapon = weapon;
+                    HUDController.instance.SetCrosshair();
                 }
             }
         }
         else
         {
-            _hudController.ClearHUD();
+            HUDController.instance.ClearHUD();
         }
     }
 

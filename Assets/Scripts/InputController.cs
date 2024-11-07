@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class InputController : MonoBehaviour
 {
@@ -46,23 +47,47 @@ public class InputController : MonoBehaviour
 
     public void OnSprint(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        ButtonControl button = context.control as ButtonControl;
+        if (button.wasPressedThisFrame)
+        {
             SprintInput(true);
-        else 
+        }
+        else if(button.wasReleasedThisFrame)
+        {
             SprintInput(false);
+        }
     }
 
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
+        {
             AttackInput(true);
-        else 
+        }
+        
+        if(context.canceled)
+        {
             AttackInput(false);
+        }
     }
 
     public void OnInteract(InputAction.CallbackContext context)
     {
+        ButtonControl button = context.control as ButtonControl;
 
+        if (button.wasPressedThisFrame)
+        {
+            Interaction(true);
+        }
+        else
+        {
+            Interaction(false);
+        }
+        //print(context.phase);
+        // if (context.performed)
+        //    Interaction(true);
+        //else
+        //    Interaction(false);
     }
 #endif
 
@@ -90,6 +115,12 @@ public class InputController : MonoBehaviour
     public void AttackInput(bool isAttacking)
     {
         attack = isAttacking;
+    }
+
+    private void Interaction(bool isInteracting)
+    {
+        print("interaction pressed");   
+        interact = isInteracting;
     }
 
     private void OnApplicationFocus(bool hasFocus)
