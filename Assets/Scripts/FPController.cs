@@ -49,11 +49,6 @@ public class FPController : MonoBehaviour
     [Tooltip("How far in degrees can you move the camera down")]
     public float BottomClamp = -90.0f;
 
-    [Header("Inventory")]
-    public GameObject CurrentlyEquippedWeapon;
-    [SerializeField]
-    Transform WeaponSlot;
-
     // cinemachine
     private float _cinemachineTargetPitch;
 
@@ -115,11 +110,9 @@ public class FPController : MonoBehaviour
 
     private void Update()
     {
-        Interact();
         JumpAndGravity();
         GroundedCheck();
         Move();
-        Attack();
     }
 
     private void LateUpdate()
@@ -253,49 +246,12 @@ public class FPController : MonoBehaviour
 
     public void Attack()
     {
-        if (CurrentlyEquippedWeapon != null && _input.attack)
-        {
-            CurrentlyEquippedWeapon.GetComponent<WeaponManager>().Fire();
-        }
+        
     }
 
     public void Interact()
     {
-        if (Physics.Raycast(new(_mainCamera.transform.position, _mainCamera.transform.forward * 2.5f), out RaycastHit hitInfo, 2.5f))
-        {
-            if(hitInfo.collider.gameObject.CompareTag("Interactable"))
-            {
-                HUDController.instance.SetHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
-            }
-
-            if(hitInfo.collider.gameObject.CompareTag("Door"))
-            {
-                HUDController.instance.SetHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
-
-                if(_input.interact)
-                {
-                    hitInfo.collider.gameObject.GetComponent<DoorController>().OpenDoor();
-                    _input.interact = false;
-                }
-            }
-
-            if(hitInfo.collider.gameObject.CompareTag("Weapon"))
-            {
-                HUDController.instance.SetHUD(hitInfo.collider.gameObject.name, hitInfo.collider.gameObject.tag);
-                
-                if(_input.interact)
-                {
-                    Destroy(hitInfo.collider.gameObject);
-                    GameObject weapon = Instantiate(hitInfo.collider.gameObject, WeaponSlot.position, WeaponSlot.rotation, WeaponSlot);
-                    CurrentlyEquippedWeapon = weapon;
-                    HUDController.instance.SetCrosshair();
-                }
-            }
-        }
-        else
-        {
-            HUDController.instance.ClearHUD();
-        }
+        
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

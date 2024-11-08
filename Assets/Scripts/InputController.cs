@@ -9,12 +9,6 @@ public class InputController : MonoBehaviour
     public Vector2 look;
     public bool jump;
     public bool sprint;
-    
-    //is our character attacking?
-    public bool attack;
-
-    // are we performing an action?
-    public bool interact;
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -24,70 +18,27 @@ public class InputController : MonoBehaviour
     public bool cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
-    public void OnMove(InputAction.CallbackContext context)
+    public void OnMove(InputValue value)
     {
-        MoveInput(context.ReadValue<Vector2>());
+        MoveInput(value.Get<Vector2>());
     }
 
-    public void OnLook(InputAction.CallbackContext context)
+    public void OnLook(InputValue value)
     {
         if (cursorInputForLook)
         {
-            LookInput(context.ReadValue<Vector2>());
+            LookInput(value.Get<Vector2>());
         }
     }
 
-    public void OnJump(InputAction.CallbackContext context)
+    public void OnJump(InputValue value)
     {
-        if (context.performed)
-            JumpInput(true);
-        else 
-            JumpInput(false);
+        JumpInput(value.isPressed);
     }
 
-    public void OnSprint(InputAction.CallbackContext context)
+    public void OnSprint(InputValue value)
     {
-        ButtonControl button = context.control as ButtonControl;
-        if (button.wasPressedThisFrame)
-        {
-            SprintInput(true);
-        }
-        else if(button.wasReleasedThisFrame)
-        {
-            SprintInput(false);
-        }
-    }
-
-    public void OnAttack(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            AttackInput(true);
-        }
-        
-        if(context.canceled)
-        {
-            AttackInput(false);
-        }
-    }
-
-    public void OnInteract(InputAction.CallbackContext context)
-    {
-        ButtonControl button = context.control as ButtonControl;
-
-        if (button.wasPressedThisFrame)
-        {
-            Interaction(true);
-        }
-        else
-        {
-            Interaction(false);
-        }
-        //print(context.phase);
-        // if (context.performed)
-        //    Interaction(true);
-        //else
-        //    Interaction(false);
+        SprintInput(value.isPressed);
     }
 #endif
 
@@ -110,17 +61,6 @@ public class InputController : MonoBehaviour
     public void SprintInput(bool newSprintState)
     {
         sprint = newSprintState;
-    }
-
-    public void AttackInput(bool isAttacking)
-    {
-        attack = isAttacking;
-    }
-
-    private void Interaction(bool isInteracting)
-    {
-        print("interaction pressed");   
-        interact = isInteracting;
     }
 
     private void OnApplicationFocus(bool hasFocus)
