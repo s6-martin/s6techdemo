@@ -43,12 +43,13 @@ public class HUDController : MonoBehaviour
     public void ClearHUD()
     {
         _hudInfo.text = string.Empty;
-        _ammoCount.text = string.Empty;
-        _crosshair.gameObject.SetActive(false);
     }
 
     public void SetAmmo(int ammo)
     {
+        if(!_ammoCount.gameObject.activeInHierarchy)
+            _ammoCount.gameObject.SetActive(true);
+
         _ammoCount.text = $"Ammo count: {ammo}";
     }
 

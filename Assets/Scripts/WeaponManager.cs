@@ -8,7 +8,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField]
     Transform projectileSpawnPoint;
 
-    int ammoCount = 100;
+    public int ammoCount = 100;
 
     //private void OnEnable()
     //{

@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31102a321faf0764a9882c40f36875a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 0}
+  projectile: {fileID: 2580233466033930445, guid: a36624f348b57c140a45775df64368f3, type: 3}
   projectileSpawnPoint: {fileID: 6895416539031092001}
 --- !u!4 &7885941569458284301 stripped
 Transform:

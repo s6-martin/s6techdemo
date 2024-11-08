@@ -289,6 +289,7 @@ public class FPController : MonoBehaviour
                     GameObject weapon = Instantiate(hitInfo.collider.gameObject, WeaponSlot.position, WeaponSlot.rotation, WeaponSlot);
                     CurrentlyEquippedWeapon = weapon;
                     HUDController.instance.SetCrosshair();
+                    HUDController.instance.SetAmmo(weapon.GetComponent<WeaponManager>().ammoCount);
                 }
             }
         }
